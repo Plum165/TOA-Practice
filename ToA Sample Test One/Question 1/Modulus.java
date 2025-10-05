@@ -1,5 +1,5 @@
 import java.util.Scanner;
-
+//Brute force question
 public class Modulus {
 // (N,Z)
 //loop through N then through Z
@@ -8,17 +8,28 @@ public class Modulus {
         // count ++
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-
-        System.out.print("Enter N (positive integer): ");
+        System.out.println("Sample Input:");
+        
+//Sample input
+        
         int N = sc.nextInt();
-        System.out.print("Enter Z (non-negative integer): ");
+        if (!(N >= 1 && N <= 1000))
+        {
+        System.out.println("Error N not within bounds");
+        }
+        
         int Z = sc.nextInt();
+        if (!(Z >= 0 && Z < N)){
+        System.out.println("Error Z not within bounds");
+        }
+        
+        
+        //you can just comment one of the functions to test them for the automarker
 
-        int countRecursive = countRecursive(N, Z, 1, 1);
-        System.out.println("Number of valid pairs (Recursive): " + countRecursive);
+        int count = countRecursive(N, Z, 1, 1); // Recursive function
+        //int count = countLoop(N, Z); //Loop function
+        System.out.println("Sample output:\n" + count);
 
-        int countLoop = countLoop(N, Z);
-        System.out.println("Number of valid pairs (Loop): " + countLoop);
 
         sc.close();
     }
