@@ -8,7 +8,7 @@ public class Modulus {
         // count ++
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Sample Input:");
+        //System.out.println("Sample Input:");
         
 //Sample input
         
@@ -26,9 +26,9 @@ public class Modulus {
         
         //you can just comment one of the functions to test them for the automarker
 
-        int count = countRecursive(N, Z, 1, 1); // Recursive function
-        //int count = countLoop(N, Z); //Loop function
-        System.out.println("Sample output:\n" + count);
+        //int count = countRecursive(N, Z, 1, 1); // Recursive function #The automarker causes this to stack overflow so the loop is much better
+        int count = countLoop(N, Z); //Loop function
+        System.out.println(count);
 
 
         sc.close();
