@@ -15,8 +15,8 @@ Input structure
     *
     *
  Target
- 
 */
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
@@ -25,94 +25,112 @@ Input structure
         
         int[] numbers = new int[N];
         System.out.print("Enter Elements:\n");
-        for (int i =0; i < N ; i++)
-        {
-        numbers[i] = sc.nextInt();
-        
+        for (int i = 0; i < N; i++) {
+            numbers[i] = sc.nextInt();
         }
         
         System.out.print("Enter (T)arget Number:\n");
         int T = sc.nextInt();
-        
 
-       // int countRecursive = countRecursive(N, Z, 1, 1);
-       //System.out.println("Sample output(Recursion):\n " + countRecursive);
+        // Recursive version call
+        int recursiveResult = recursiveMax(numbers, T, 0, 1);  // start with score = 1
+        System.out.println("Sample output (Recursion):\n" + recursiveResult);
 
-        int highLoop = Loop(numbers, T);
-        System.out.println("Sample output(Loop):\n" + highLoop);
+        // Iterative version call
+        int loopResult = Loop(numbers, T);
+        System.out.println("Sample output (Loop):\n" + loopResult);
 
         sc.close();
     }
 
-    // Recursive version
-    public static int countRecursive(int N, int Z, int X, int Y) {
-        if (X >= N) {
-            return 0; // stop when X exceeds N-1
+
+    // RECURSIVE VERSION
+
+    /*
+     * recursiveMax():
+     * This recursive function explores all combinations of + and * operations
+     * which is applied to the list, keeping track of the current score.
+     * It returns the highest score achieved that is still less than T.
+
+     */
+    public static int recursiveMax(int[] numbers, int T, int index, int currentScore) {
+        // Base case
+                if (index == numbers.length) {
+            return (currentScore < T) ? currentScore : 0;
         }
 
-        // move to next row when Y reaches N
-        if (Y >= N) {
-            return countRecursive(N, Z, X + 1, 1);
-        }
+        // Option 1: Add the next number
+        int addResult = recursiveMax(numbers, T, index + 1, currentScore + numbers[index]);
 
-        // count if (X * Y) % N == Z
-        int add = ((X * Y) % N == Z) ? 1 : 0;
+        // Option 2: Multiply by the next number
+        int multResult = recursiveMax(numbers, T, index + 1, currentScore * numbers[index]);
 
-        // move to next Y
-        return add + countRecursive(N, Z, X, Y + 1);
+        // Return the better of the two (closest to T but still < T)
+        int best = 0;
+        if (addResult < T && addResult > best) best = addResult;
+        if (multResult < T && multResult > best) best = multResult;
+
+        return best;
     }
 
-    // Iterative version
+
+    // ITERATIVE VERSION
+    /*
+     * Loop():
+     * Iteratively explores additions and multiplications
+     * to approximate the highest achievable score under T.
+     * (This version is less exhaustive but shows iterative logic.)
+     */
     public static int Loop(int[] N, int T) {
         int highest = 0;
         int score = 1;
-        int add = score + 0;
-        int multiply = score*1;
         int total = 0;
+        int add = score;
+        int multiply = score;
 
-        for (int i = 0 ; i < N.length ; i++) {
-           add  +=  N[i];
-           multiply *= N[i]; 
-           for (int j = i ; j < N.length ; j++)   
-           {       
-           int had = add_multiply(N ,add, T, j);
-           int hmu = add_multiply(N ,multiply, T, j);
-           if (had > hmu)
-           {
-             total = had;
+        for (int i = 0; i < N.length; i++) {
+            add += N[i];
+            multiply *=  N[i];
+            int had = add_multiply(N, add, T, i);
+            int hmu = add_multiply(N, multiply, T, i);
+            total = Math.max(had, hmu);
             
-           }
-           else  total = hmu;
-
-             if (total > T)
+            if (had >= T)
             {
-             break;
+             total = hmu;
             }
-           }
-            if (total > highest) 
-            {
-             highest = total;
-            }
-           
+            if (hmu >= T)
+            { total = had;}
+            
+             
+            
 
+            if (total >= T) {
+               continue;
+            }
+
+            if (total > highest) {
+                highest = total;
+            }
         }
         return highest;
     }
-    
-  public static int add_multiply(int[] N , int value,int T,int j)
-{
-   for (int i = j ; i < N.length ; i++)
-   {
-    if ((value*N[j]) < T)
-    {
-      value *= N[j];
+
+    /*
+     * add_multiply():
+     * Simulates a sequence of additions and multiplications,
+     * checking that no intermediate result exceeds T.
+     */
+    public static int add_multiply(int[] N, int value, int T, int j) {
+        for (int i = j; i < N.length; i++) {
+            if ((value * N[i]) < T) {
+                value *= N[i];
+            } else if (((value + N[i]) > T) && ((j + 1) >= N.length)) {
+                return 0;
+            } else {
+                value += N[i];
+            }
+        }
+        return value;
     }
-    else if (((value + N[j]) > T) && ((j + 1 ) >= N.length)){
-    return 0;
-    }
-    else value += N[j];
-   }
-   
-   return value;
-}
 }
