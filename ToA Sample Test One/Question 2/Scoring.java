@@ -2,135 +2,104 @@ import java.util.Scanner;
 
 public class Scoring {
 /*
-Problem
-List N (Positive numbers)
-target score (T)
-Score = 1 (start)
-List can + or *
-Target is to find maximum score that achieved less than T
+Problem:
+Given a list of positive numbers and a target score T,
+starting with score = 1, we can either add or multiply
+each number in the list in sequence. The goal is to find
+the maximum score achievable that is less than T.
 
-Input structure
- Number in the list 
-    *
-    *
-    *
- Target
+Input structure:
+- Number of elements in the list
+- List of elements
+- Target score T
 */
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        System.out.print("Enter Number of items in the list:\n");
+        System.out.println("=== Scoring Problem ===");
+        System.out.print("Enter number of items in the list: ");
         int N = sc.nextInt();
-        
+
         int[] numbers = new int[N];
-        System.out.print("Enter Elements:\n");
+        System.out.println("Enter the elements of the list:");
         for (int i = 0; i < N; i++) {
+            System.out.print("Element " + (i+1) + ": ");
             numbers[i] = sc.nextInt();
         }
-        
-        System.out.print("Enter (T)arget Number:\n");
+
+        System.out.print("Enter the target number (T): ");
         int T = sc.nextInt();
 
-        // Recursive version call
-        int recursiveResult = recursiveMax(numbers, T, 0, 1);  // start with score = 1
-        System.out.println("Sample output (Recursion):\n" + recursiveResult);
+        // ------------------------
+        // Recursive version
+        // ------------------------
+        int recursiveResult = recursiveMax(numbers, T, 0, 1); // start with score = 1
+        System.out.println("\nSample output (Recursion): " + recursiveResult);
 
-        // Iterative version call
+        // ------------------------
+        // Iterative version
+        // ------------------------
         int loopResult = Loop(numbers, T);
-        System.out.println("Sample output (Loop):\n" + loopResult);
+        System.out.println("Sample output (Loop): " + loopResult);
 
         sc.close();
     }
 
-
+    // -------------------------------------------------------------------
     // RECURSIVE VERSION
-
+    // -------------------------------------------------------------------
     /*
      * recursiveMax():
-     * This recursive function explores all combinations of + and * operations
-     * which is applied to the list, keeping track of the current score.
-     * It returns the highest score achieved that is still less than T.
-
+     * Recursively explores all possible + and * operations on the list,
+     * keeping track of the current score. Returns the highest valid score
+     * < T.
      */
     public static int recursiveMax(int[] numbers, int T, int index, int currentScore) {
-        // Base case
-                if (index == numbers.length) {
-            return (currentScore < T) ? currentScore : 0;
-        }
+        // Stop if current score exceeds target
+        if (currentScore >= T) return 0;
 
-        // Option 1: Add the next number
+        // Base case: all numbers processed
+        if (index == numbers.length) return currentScore;
+
+        // Option 1: Add next number
         int addResult = recursiveMax(numbers, T, index + 1, currentScore + numbers[index]);
 
-        // Option 2: Multiply by the next number
+        // Option 2: Multiply by next number
         int multResult = recursiveMax(numbers, T, index + 1, currentScore * numbers[index]);
 
-        // Return the better of the two (closest to T but still < T)
-        int best = 0;
-        if (addResult < T && addResult > best) best = addResult;
-        if (multResult < T && multResult > best) best = multResult;
-
-        return best;
+        // Return the higher of the two
+        return Math.max(addResult, multResult);
     }
 
-
+    // -------------------------------------------------------------------
     // ITERATIVE VERSION
+    // -------------------------------------------------------------------
     /*
      * Loop():
-     * Iteratively explores additions and multiplications
-     * to approximate the highest achievable score under T.
-     * (This version is less exhaustive but shows iterative logic.)
+     * Iteratively finds maximum achievable score under T using
+     * additions and multiplications. Fully exhaustive via DP array.
      */
-    public static int Loop(int[] N, int T) {
-        int highest = 0;
-        int score = 1;
-        int total = 0;
-        int add = score;
-        int multiply = score;
+    public static int Loop(int[] numbers, int T) {
+        boolean[] reachable = new boolean[T]; // reachable[s] = true if score s is achievable
+        reachable[1] = true; // starting score
 
-        for (int i = 0; i < N.length; i++) {
-            add += N[i];
-            multiply *=  N[i];
-            int had = add_multiply(N, add, T, i);
-            int hmu = add_multiply(N, multiply, T, i);
-            total = Math.max(had, hmu);
-            
-            if (had >= T)
-            {
-             total = hmu;
+        for (int num : numbers) {
+            boolean[] next = new boolean[T];
+            for (int s = 0; s < T; s++) {
+                if (reachable[s]) {
+                    if (s + num < T) next[s + num] = true;
+                    if (s * num < T) next[s * num] = true;
+                }
             }
-            if (hmu >= T)
-            { total = had;}
-            
-             
-            
-
-            if (total >= T) {
-               continue;
-            }
-
-            if (total > highest) {
-                highest = total;
-            }
+            reachable = next;
         }
-        return highest;
-    }
 
-    /*
-     * add_multiply():
-     * Simulates a sequence of additions and multiplications,
-     * checking that no intermediate result exceeds T.
-     */
-    public static int add_multiply(int[] N, int value, int T, int j) {
-        for (int i = j; i < N.length; i++) {
-            if ((value * N[i]) < T) {
-                value *= N[i];
-            } else if (((value + N[i]) > T) && ((j + 1) >= N.length)) {
-                return 0;
-            } else {
-                value += N[i];
-            }
+        // Find the maximum achievable score < T
+        for (int i = T - 1; i >= 0; i--) {
+            if (reachable[i]) return i;
         }
-        return value;
+
+        return 0; // fallback
     }
 }
