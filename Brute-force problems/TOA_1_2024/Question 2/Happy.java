@@ -28,8 +28,8 @@ then 12  + 02  + 02 = 1.
 
 
         
-        
-        //Reversing the matrix
+        //Reverse the loop so we can check for largest number first and breaks if it found
+        System.out.print("The Largest Left-Truncatable Happy Number:\n");
         for (int i = N-1 ; i >= 0 ; i--)
         {
         if (happy_number(i)){
