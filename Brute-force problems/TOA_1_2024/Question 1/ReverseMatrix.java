@@ -1,5 +1,8 @@
 import java.util.Scanner;
 
+//Moegamat Samsodien
+//6 October 2025
+
 public class ReverseMatrix {
 /*
 Problem:

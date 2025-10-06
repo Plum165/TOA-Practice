@@ -1,5 +1,8 @@
 import java.util.Scanner;
 
+//Moegamat Samsodien
+//5 October 2025
+
 public class Scoring {
 /*
 Problem:
