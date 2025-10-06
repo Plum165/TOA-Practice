@@ -1,3 +1,5 @@
+//Moegamat Samsodien
+//5 October 2025
 import java.util.Scanner;
 //Brute force question
 public class Modulus {
