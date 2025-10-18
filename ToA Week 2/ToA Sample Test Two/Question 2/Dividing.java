@@ -23,7 +23,7 @@ public class Dividing {
     // Binary search to find the maximum M that works
     public static int findMaxLength(int[] planks, int K, int maxLen) {
         int low = 1;       // smallest possible length
-        int high = maxLen; // largest possible length
+        int high = 1000000000; // largest possible length
         int result = 0;
 
         while (low <= high) {

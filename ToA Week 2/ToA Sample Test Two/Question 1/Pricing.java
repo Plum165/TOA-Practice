@@ -4,12 +4,13 @@ public class Pricing {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        // Optional user prompt — comment this out if submitting to automarker
-        System.out.print("Enter the amount of currency (N): ");
+        // Optional user prompt comment this out if submitting to automarker
+        
 
         long N = sc.nextLong(); // total amount of money
+        System.out.print("Enter the amount of currency (N): " + N);
 
-        // We’ll use binary search to find the largest K such that f(K) <= N
+        // We'll use binary search to find the largest K such that f(K) <= N
         long low = 1;
         long high = N; // upper bound, since f(K) grows faster than K
         long best = 0;
